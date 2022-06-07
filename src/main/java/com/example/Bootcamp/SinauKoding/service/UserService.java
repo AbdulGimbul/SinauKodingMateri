@@ -33,7 +33,6 @@ public class UserService {
                 detailUserRepository.save(detailUser);
             }
         }
-
         return user;
     }
 
