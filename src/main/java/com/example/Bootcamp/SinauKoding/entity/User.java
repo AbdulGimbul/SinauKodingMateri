@@ -34,9 +34,4 @@ public class User {
     @JoinColumn(name = "id_detail")
     private DetailUser detailUser;
 
-    @OneToMany(mappedBy = "user")
-    private List<DetailUser> detailUserList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<UserDetailUser> userDetailUsers = new ArrayList<>();
 }

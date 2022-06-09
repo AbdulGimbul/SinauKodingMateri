@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findByProfileNameContaining(String profileName);
+
+    Integer countByProfileNameContaining(String name);
 }

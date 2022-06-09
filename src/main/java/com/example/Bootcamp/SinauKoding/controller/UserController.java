@@ -1,7 +1,8 @@
 package com.example.Bootcamp.SinauKoding.controller;
 
-import com.example.Bootcamp.SinauKoding.Response;
+import com.example.Bootcamp.SinauKoding.common.Response;
 import com.example.Bootcamp.SinauKoding.entity.User;
+import com.example.Bootcamp.SinauKoding.entity.dto.UserDTO;
 import com.example.Bootcamp.SinauKoding.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,37 +19,39 @@ public class UserController {
     UserService service;
 
     @PostMapping
-    public User saveUser(@RequestBody User param){
-        return service.save(param);
+    public com.example.Bootcamp.SinauKoding.common.Response saveUser(@RequestBody UserDTO param){
+        return new com.example.Bootcamp.SinauKoding.common.Response(service.save(param), "Data berhasil disimpan", HttpStatus.OK);
     }
 
     @GetMapping
     public Response findAll(){
-        return new Response(service.lihatSemuaData(), "Data berhasil ditampilkan", HttpStatus.OK);
+        return new com.example.Bootcamp.SinauKoding.common.Response(service.lihatSemuaData(), "Data berhasil ditampilkan", service.countData(null), HttpStatus.OK);
     }
 
     @GetMapping(value = "/find-by-profile-name")
-    public List<User> findByProfileName(@RequestParam(value = "profile-name") String profileName,
+    public Response findByProfileName(@RequestParam(value = "profile-name") String profileName,
                                         @RequestParam(value = "username", required = false) String userName){
-        return service.findByProfileName(profileName);
+        List<UserDTO> data = service.findByProfileName(profileName);
+        return new Response(data, data.isEmpty() ? "Data tidak ditemukan" : "Data ditemukan", service.countData(profileName), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
-    public User findById(@PathVariable int id){
-        return service.findById(id);
+    public Response findById(@PathVariable int id){
+        UserDTO data = service.findById(id);
+        return new Response(data, data != null ? "Data dengan id tersebut tidak ditemukan" : "Data ditemukan", HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}")
-    public User updateData(@RequestBody User param, @PathVariable int id){
-        return service.updateData(param, id);
+    public Response updateData(@RequestBody UserDTO param, @PathVariable int id){
+        return new Response(service.updateData(param, id), "Data berhasil disimpan", HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
-    public String deleteData(@PathVariable int id) {
+    public Response deleteData(@PathVariable int id) {
         if (service.deleteData(id)) {
-            return "Data berhasil dihapus";
+            return new Response("Data berhasil dihapus", HttpStatus.OK);
         } else {
-            return "Data gagal dihapus";
+            return new Response("Data gagal dihapus", HttpStatus.OK);
         }
     }
 }

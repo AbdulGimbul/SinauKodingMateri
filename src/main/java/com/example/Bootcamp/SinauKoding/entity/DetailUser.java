@@ -19,12 +19,4 @@ public class DetailUser {
 
     @Column(name = "alamat")
     private String address;
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_user")
-    private User user;
-
-    @OneToMany(mappedBy = "detailUser")
-    private List<UserDetailUser> userDetailUsers = new ArrayList<>();
 }
